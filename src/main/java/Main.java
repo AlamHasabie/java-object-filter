@@ -8,9 +8,10 @@ public class Main
 		try 
 		{
 			Document doc = Loader.load("sample.xml");	
+			System.out.println("Okay...");
 		} catch (Exception e)
 		{
-
+			System.out.println(e);
 		}
 	}
 }
