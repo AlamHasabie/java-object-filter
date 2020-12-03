@@ -1,6 +1,6 @@
 package filter;
 
-public class MethodFilter extends NonTerminalFilter
+public class MethodFilter extends Filter
 {
 	@Override
 	public boolean shouldFilter(Object o, Class c)

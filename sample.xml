@@ -1,6 +1,6 @@
-<filter name="DefaultFilter">
-	<field name="aaa">
-		<name>A</name>
+<filter>
+	<field>
+		<name>a</name>
 		<value>0</value>
 	</field>
 </filter>
