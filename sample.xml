@@ -1,2 +1,6 @@
 <filter name="DefaultFilter">
+	<field name="aaa">
+		<name>A</name>
+		<value>0</value>
+	</field>
 </filter>

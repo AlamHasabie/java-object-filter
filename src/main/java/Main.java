@@ -7,8 +7,8 @@ public class Main
 	{
 		try 
 		{
-			Document doc = Loader.load("sample.xml");	
-			System.out.println("Okay...");
+			Document doc = Loader.load("sample.xml");
+			Node root = doc.getDocumentElement();
 		} catch (Exception e)
 		{
 			System.out.println(e);
