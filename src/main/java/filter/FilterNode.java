@@ -55,7 +55,7 @@ public class FilterNode implements ITreeToString
 			builder.append("  ");
 		}
 
-		builder.append("filter\n");
+		builder.append("filter , class:{" + c + "}\n");
 		for(Filter filter: filters)
 		{
 			filter.toString(builder, depth + 1);
