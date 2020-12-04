@@ -15,7 +15,7 @@ public class FieldFilter extends Filter
 	private Field field;
 
 	public FieldFilter(Node root, Class cparam)
-		throws NoSuchFieldException
+		throws NoSuchMethodException, NoSuchFieldException
 	{
 		c = cparam;
 		Map<TagHelper.Tag, String> foundTags = new HashMap();
@@ -95,7 +95,7 @@ public class FieldFilter extends Filter
 	}
 
 	private void build(Map<TagHelper.Tag, String> map, Node root, Class cparam)
-		throws NoSuchFieldException
+		throws NoSuchMethodException, NoSuchFieldException
 	{
 		field = cparam.getField(map.get(TagHelper.Tag.NAME));
 		if(isLeaf && map.containsKey(TagHelper.Tag.VALUE))
@@ -135,7 +135,7 @@ public class FieldFilter extends Filter
 
 
 	public static FieldFilter generate(Node root, Class c)
-		throws NoSuchFieldException
+		throws NoSuchMethodException, NoSuchFieldException
 	{
 		return new FieldFilter(root, c);
 	}

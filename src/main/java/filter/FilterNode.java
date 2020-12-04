@@ -14,7 +14,7 @@ public class FilterNode implements ITreeToString
 	private Class c;
 
 	public FilterNode(Node root, Class paramClass)
-		throws NoSuchFieldException
+		throws NoSuchMethodException, NoSuchFieldException
 	{
 		filters = new ArrayList();
 		c = paramClass;
@@ -29,8 +29,7 @@ public class FilterNode implements ITreeToString
 					filters.add(FieldFilter.generate(node, paramClass));
 				} else if (TagHelper.tagEquals(node, TagHelper.Tag.METHOD))
 				{
-					System.out.println("Method found");
-					//filters.add(MethodFilter.generate(node, paramClass));
+					filters.add(MethodFilter.generate(node, paramClass));
 				} else 
 				{
 					throw new InvalidTagException(
@@ -63,13 +62,13 @@ public class FilterNode implements ITreeToString
 	}
 
 	public static FilterNode generate(Node root, Class paramClass)
-		throws NoSuchFieldException
+		throws NoSuchMethodException, NoSuchFieldException
 	{
 		return new FilterNode(root, paramClass);
 	}
 
 	public static ArrayList<FilterNode> parse(Node root, Class paramClass)
-		throws NoSuchFieldException
+		throws NoSuchMethodException, NoSuchFieldException
 	{
 		ArrayList<FilterNode> filters = new ArrayList();
 		NodeList children = root.getChildNodes();

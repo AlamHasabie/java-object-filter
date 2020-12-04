@@ -8,4 +8,8 @@
 			</field>
 		</filter>
 	</field>
+	<method>
+		<name>b</name>
+		<value>1</value>
+	</method>
 </filter>
