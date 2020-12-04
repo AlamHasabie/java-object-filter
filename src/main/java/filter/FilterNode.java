@@ -3,75 +3,91 @@ package filter;
 
 import org.w3c.dom.*;
 import java.util.*;
+import utils.TagHelper;
+import utils.ITreeToString;
+import exceptions.InvalidTagException;
 
-// PropertyNotFound, MethodNotFound
-import javax.el.ELException.*;
-
-public class FilterNode
+public class FilterNode implements ITreeToString 
 {
 
 	private ArrayList<Filter> filters;
 	private Class c;
 
 	public FilterNode(Node root, Class paramClass)
+		throws NoSuchFieldException
 	{
 		filters = new ArrayList();
 		c = paramClass;
 
 		NodeList children = root.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++) {
-			if(FilterNode.isFieldTag(children.item(i)))
+			Node node = children.item(i);
+			if(TagHelper.isElement(node))
 			{
-				System.out.println("Field found");
-			}
-
-			if(FilterNode.isMethodTag(children.item(i)))
-			{
-				System.out.println("Method found");
+				if(TagHelper.tagEquals(node, TagHelper.Tag.FIELD))
+				{
+					filters.add(FieldFilter.generate(node, paramClass));
+				} else if (TagHelper.tagEquals(node, TagHelper.Tag.METHOD))
+				{
+					System.out.println("Method found");
+					//filters.add(MethodFilter.generate(node, paramClass));
+				} else 
+				{
+					throw new InvalidTagException(
+						"Invalid tag " + node.getNodeName() + " during filter parsing"
+					);
+				}
 			}
 		}
 	}
 
+	public String toString()
+	{
+		StringBuilder strBuilder = new StringBuilder();
+		toString(strBuilder, 0);
+		return strBuilder.toString();
+	}
+
+	public void toString(StringBuilder builder, int depth)
+	{
+		for(int i = 0 ; i < depth; i++)
+		{
+			builder.append("  ");
+		}
+
+		builder.append("filter\n");
+		for(Filter filter: filters)
+		{
+			filter.toString(builder, depth + 1);
+		}
+	}
+
 	public static FilterNode generate(Node root, Class paramClass)
+		throws NoSuchFieldException
 	{
 		return new FilterNode(root, paramClass);
 	}
 
 	public static ArrayList<FilterNode> parse(Node root, Class paramClass)
+		throws NoSuchFieldException
 	{
 		ArrayList<FilterNode> filters = new ArrayList();
 		NodeList children = root.getChildNodes();
 		for (int i = 0; i < children.getLength(); i++) {
-    		if(isFilterTag(children.item(i)))
+    		if(TagHelper.isElement(children.item(i)))
     		{
-    			filters.add(new FilterNode(children.item(i), paramClass));
+    			if (!TagHelper.tagEquals(children.item(i), TagHelper.Tag.FILTER))
+    			{
+    				throw new InvalidTagException(
+    					"Invalid tag " + children.item(i).getNodeName() + " found during parsing"
+    				);
+    			}
+
+				filters.add(new FilterNode(children.item(i), paramClass));
     		}
 		}
 
 		return filters;
 	}
 
-	private static boolean isElement(Node root)
-	{
-		return root.getNodeType() == Node.ELEMENT_NODE;
-	}
-
-	private static boolean nameEquals(Node root, String name)
-	{
-		return root.getNodeName().equals(name);
-	}
-	private static boolean isFieldTag(Node root)
-	{
-		return isElement(root) && nameEquals(root, "field");
-	}
-
-	private static boolean isMethodTag(Node root)
-	{
-		return isElement(root) && nameEquals(root, "method");
-	}
-
-	private static boolean isFilterTag(Node root)
-	{
-		return isElement(root) && nameEquals(root, "filter");
-	}
 }

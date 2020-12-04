@@ -3,7 +3,7 @@ package sampleclass;
 public class A
 {
 	public int a;
-	private B b;
+	public B b;
 	private int c;
 	public A(){
 		a = 0;

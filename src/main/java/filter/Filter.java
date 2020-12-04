@@ -1,7 +1,13 @@
 package filter;
 
-public abstract class Filter
+import utils.ITreeToString;
+
+public abstract class Filter implements ITreeToString
 {
-	private FilterNode node;
+	protected FilterNode filterNode;
+	protected Class c;
+	protected boolean isLeaf;
+	protected String value;
+
 	public abstract boolean shouldFilter(Object o, Class c);
 }

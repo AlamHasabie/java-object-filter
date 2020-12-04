@@ -1,6 +1,11 @@
 <filter>
 	<field>
-		<name>a</name>
-		<value>0</value>
+		<name>b</name>
+		<filter>
+			<field>
+				<name>c</name>
+				<value>1</value>
+			</field>
+		</filter>
 	</field>
 </filter>
