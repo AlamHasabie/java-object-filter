@@ -93,4 +93,12 @@ public abstract class Filter implements ITreeToString
 
 		return nodeMap;
 	}
+
+	protected void addTreeIndent(StringBuilder s, int depth)
+	{
+		for(int i = 0 ; i < depth ; i ++)
+		{
+			s.append("  ");
+		}
+	}
 }

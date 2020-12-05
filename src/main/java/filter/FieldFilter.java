@@ -1,6 +1,7 @@
 package filter;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,20 +14,22 @@ import exceptions.*;
 public class FieldFilter extends Filter
 {
 	private Field field;
+	private Method toString;
 
 	public FieldFilter(Map<TagHelper.Tag, Node> map, Class cparam)
 		throws NoSuchMethodException, NoSuchFieldException
 	{
 		c = cparam;
 		field = cparam.getField(map.get(TagHelper.Tag.NAME).getTextContent());
+		Class cout = field.getType();
 		if(map.containsKey(TagHelper.Tag.VALUE))
 		{
 			isLeaf = true;
+			toString = cout.getMethod("toString");
 			value = map.get(TagHelper.Tag.VALUE).getTextContent();
 		} else 
 		{
 			isLeaf = false;
-			Class cout = field.getType();
 			filterNode = FilterNode.generate(map.get(TagHelper.Tag.FILTER), cout);
 		}
 	}
@@ -39,11 +42,7 @@ public class FieldFilter extends Filter
 
 	public void toString(StringBuilder builder, int depth)
 	{
-		for(int i = 0 ; i < depth ; i ++)
-		{
-			builder.append("  ");
-		}
-
+		addTreeIndent(builder, depth);
 		if(isLeaf)
 		{
 			builder.append("leaf-field:{" + field.toString() + "} val:" + value + "\n");
