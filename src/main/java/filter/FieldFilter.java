@@ -2,6 +2,7 @@ package filter;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,9 +36,21 @@ public class FieldFilter extends Filter
 	}
 
 	@Override
-	public boolean shouldFilter(Object o, Class cparam)
+	public boolean shouldFilter(Object o)
+		throws IllegalAccessException, InvocationTargetException
 	{
-		return true;
+		if(!c.isInstance(o))
+		{
+			throw new InvalidFilterArgumentClassException(o.getClass(), c);
+		}
+
+		if(isLeaf)
+		{
+			return field.get(o).toString().equals(value);
+		} else 
+		{
+			return filterNode.shouldFilter(field.get(o));
+		}
 	}
 
 	public void toString(StringBuilder builder, int depth)

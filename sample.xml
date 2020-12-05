@@ -4,12 +4,13 @@
 		<filter>
 			<field>
 				<name>c</name>
-				<value>1</value>
+				<filter>
+					<field>
+						<name>c</name>
+						<value>2</value>
+					</field>
+				</filter>
 			</field>
 		</filter>
 	</field>
-	<method>
-		<name>b</name>
-		<value>1</value>
-	</method>
 </filter>

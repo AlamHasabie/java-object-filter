@@ -1,6 +1,7 @@
 package filter;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,9 +35,21 @@ public class MethodFilter extends Filter
 	}
 
 	@Override
-	public boolean shouldFilter(Object o, Class cparam)
+	public boolean shouldFilter(Object o)
+		throws IllegalAccessException, InvocationTargetException
 	{
-		return true;
+		if(!c.isInstance(o))
+		{
+			throw new InvalidFilterArgumentClassException(o.getClass(), c);
+		}
+
+		if(isLeaf)
+		{
+			return method.invoke(o).toString().equals(value);
+		} else 
+		{
+			return filterNode.shouldFilter(method.invoke(o));
+		}
 	}
 
 	public void toString(StringBuilder builder, int depth)

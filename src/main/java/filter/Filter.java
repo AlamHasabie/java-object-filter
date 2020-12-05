@@ -2,6 +2,7 @@ package filter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.lang.reflect.InvocationTargetException;
 
 
 import org.w3c.dom.Node;
@@ -19,7 +20,8 @@ public abstract class Filter implements ITreeToString
 	protected boolean isLeaf;
 	protected String value;
 
-	public abstract boolean shouldFilter(Object o, Class cparam);
+	public abstract boolean shouldFilter(Object o)
+		throws IllegalAccessException, InvocationTargetException;
 
 	/** Throws unchecked FilterException , which should propagate to
 	{@link filter.FilterNode#parse(Node root, Class paramClass)}

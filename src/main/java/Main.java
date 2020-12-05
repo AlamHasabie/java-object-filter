@@ -19,6 +19,7 @@ public class Main
 			for(FilterNode filter : filters)
 			{
 				System.out.println(filter.toString());
+				System.out.println(filter.shouldFilter(new A()));
 			}
 			
 		} catch (Exception e)
