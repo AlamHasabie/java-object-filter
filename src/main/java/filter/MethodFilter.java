@@ -8,6 +8,7 @@ import java.util.Map;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import utils.PrimitiveWrapper;
 import utils.TagHelper;
 import exceptions.*;
 
@@ -22,6 +23,12 @@ public class MethodFilter extends Filter
 		c = cparam;
 		method = cparam.getMethod(map.get(TagHelper.Tag.NAME).getTextContent());
 		Class cout = method.getReturnType();
+
+		if(cout.isPrimitive())
+		{
+			cout = PrimitiveWrapper.getWrapper(cout);
+		}
+
 		if(map.containsKey(TagHelper.Tag.VALUE))
 		{
 			isLeaf = true;

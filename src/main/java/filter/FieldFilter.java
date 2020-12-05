@@ -10,6 +10,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import utils.TagHelper;
+import utils.PrimitiveWrapper;
 import exceptions.*;
 
 public class FieldFilter extends Filter
@@ -23,6 +24,12 @@ public class FieldFilter extends Filter
 		c = cparam;
 		field = cparam.getField(map.get(TagHelper.Tag.NAME).getTextContent());
 		Class cout = field.getType();
+
+		if(cout.isPrimitive())
+		{
+			cout = PrimitiveWrapper.getWrapper(cout);
+		}
+
 		if(map.containsKey(TagHelper.Tag.VALUE))
 		{
 			isLeaf = true;
