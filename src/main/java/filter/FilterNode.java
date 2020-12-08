@@ -14,7 +14,7 @@ import exceptions.filtering.FilteringException;
 public class FilterNode implements ITreeToString 
 {
 
-	private ArrayList<Filter> filters;
+	private ArrayList<AbstractFilter> filters;
 	private Class c;
 
 	public FilterNode(Node root, Class paramClass)
@@ -59,7 +59,7 @@ public class FilterNode implements ITreeToString
 		}
 
 		builder.append("filter , class:{" + c + "}\n");
-		for(Filter filter: filters)
+		for(AbstractFilter filter: filters)
 		{
 			filter.toString(builder, depth + 1);
 		}
@@ -78,7 +78,7 @@ public class FilterNode implements ITreeToString
 			return false;
 		}
 
-		for(Filter filter : filters)
+		for(AbstractFilter filter : filters)
 		{
 			if(!filter.shouldFilter(o)){
 				return false;

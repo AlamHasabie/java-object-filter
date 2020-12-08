@@ -12,10 +12,9 @@ public class TagHelper
 		NAME("name"),
 		VALUE("value"),
 		CLASS("class"),
-		// Sentinel unk from string->tag conversion
+		GROUP("group"),
 		UNK("unk");
-
-
+		
 		public String val;
 	    private Tag(String label) {
         	this.val = label;
@@ -34,36 +33,13 @@ public class TagHelper
 
 	public static Tag fromString(String s)
 	{
-		if(s.equals("filter"))
+		for(Tag t : Tag.values())
 		{
-			return Tag.FILTER;
+			if(s.equals(t.val))
+			{
+				return t;
+			}
 		}
-
-		if(s.equals("field"))
-		{
-			return Tag.FIELD;
-		}
-
-		if(s.equals("method"))
-		{
-			return Tag.METHOD;
-		}
-
-		if(s.equals("name"))
-		{
-			return Tag.NAME;
-		}
-
-		if(s.equals("value"))
-		{
-			return Tag.VALUE;
-		}
-
-		if(s.equals("class"))
-		{
-			return Tag.CLASS;
-		}
-
 		return Tag.UNK;
 	}
 }
