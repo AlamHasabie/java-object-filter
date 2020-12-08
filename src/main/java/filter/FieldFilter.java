@@ -19,7 +19,6 @@ import exceptions.filtering.FilteringException;
 public class FieldFilter extends Filter
 {
 	private Field field;
-	private Method toString;
 
 	public FieldFilter(Map<TagHelper.Tag, Node> map, Class cparam)
 		throws ParsingException
@@ -48,7 +47,7 @@ public class FieldFilter extends Filter
 			if(map.containsKey(TagHelper.Tag.VALUE))
 			{
 				isLeaf = true;
-				toString = cout.getMethod("toString");
+				cout.getMethod("toString");
 				value = map.get(TagHelper.Tag.VALUE).getTextContent();
 			} else 
 			{
