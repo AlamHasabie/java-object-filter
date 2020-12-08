@@ -4,6 +4,7 @@
 		<filter>
 			<field>
 				<name>t</name>
+				<class>sampleclass.C</class>
 				<filter>
 					<field>
 						<name>c</name>

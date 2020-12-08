@@ -6,8 +6,11 @@ import java.util.*;
 import utils.TagHelper;
 import utils.ITreeToString;
 import exceptions.parsing.InvalidTagException;
-import exceptions.InvalidFilterArgumentClassException;
+import exceptions.parsing.ParsingException;
 import java.lang.reflect.InvocationTargetException;
+
+import exceptions.filtering.FilteringException;
+import exceptions.filtering.InvalidFilterArgumentClassException;
 
 public class FilterNode implements ITreeToString 
 {
@@ -64,8 +67,13 @@ public class FilterNode implements ITreeToString
 	}
 
 	public boolean shouldFilter(Object o)
-		throws IllegalAccessException, InvocationTargetException
+		throws FilteringException
 	{
+		if(o==null)
+		{
+			return false;
+		}
+
 		if(!c.isInstance(o))
 		{
 			throw new InvalidFilterArgumentClassException(o.getClass(), c);

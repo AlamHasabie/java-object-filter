@@ -14,6 +14,8 @@ import utils.TagHelper;
 import utils.PrimitiveWrapper;
 import exceptions.parsing.ParsingException;
 import exceptions.parsing.InvalidTargetClassException;
+import exceptions.filtering.FilteringException;
+import exceptions.filtering.InvalidFilterArgumentClassException;
 
 public class FieldFilter extends Filter
 {
@@ -35,10 +37,10 @@ public class FieldFilter extends Filter
 
 			if(map.containsKey(TagHelper.Tag.CLASS))
 			{
-				Class ctarget = Class.forName(map.get(TagHelper.Tag.CLASS));
+				Class ctarget = Class.forName(map.get(TagHelper.Tag.CLASS).getTextContent());
 				if(!cout.isAssignableFrom(ctarget))
 				{
-					throw new InvalidTargetClassException;
+					throw new InvalidTargetClassException(ctarget, cout);
 				}
 
 				cout = ctarget;
@@ -71,19 +73,29 @@ public class FieldFilter extends Filter
 
 	@Override
 	public boolean shouldFilter(Object o)
-		throws IllegalAccessException, InvocationTargetException
+		throws FilteringException
 	{
-		if(!c.isInstance(o))
-		{
-			throw new InvalidFilterArgumentClassException(o.getClass(), c);
-		}
+		try {
+			if(o==null)
+			{
+				return false;
+			}
 
-		if(isLeaf)
+			if(!c.isInstance(o))
+			{
+				throw new InvalidFilterArgumentClassException(o.getClass(), c);
+			}
+
+			if(isLeaf)
+			{
+				return field.get(o).toString().equals(value);
+			} else 
+			{
+				return filterNode.shouldFilter(field.get(o));
+			}
+		} catch (IllegalAccessException e)
 		{
-			return field.get(o).toString().equals(value);
-		} else 
-		{
-			return filterNode.shouldFilter(field.get(o));
+			throw new FilteringException(e);
 		}
 	}
 

@@ -13,6 +13,8 @@ import utils.PrimitiveWrapper;
 import utils.TagHelper;
 import exceptions.parsing.ParsingException;
 import exceptions.parsing.InvalidTargetClassException;
+import exceptions.filtering.FilteringException;
+import exceptions.filtering.InvalidFilterArgumentClassException;
 
 public class MethodFilter extends Filter
 {
@@ -35,10 +37,10 @@ public class MethodFilter extends Filter
 
 			if(map.containsKey(TagHelper.Tag.CLASS))
 			{
-				Class ctarget = Class.forName(map.get(TagHelper.Tag.CLASS));
+				Class ctarget = Class.forName(map.get(TagHelper.Tag.CLASS).getTextContent());
 				if(!cout.isAssignableFrom(ctarget))
 				{
-					throw new InvalidTargetClassException;
+					throw new InvalidTargetClassException(ctarget, cout);
 				}
 
 				cout = ctarget;
@@ -55,7 +57,7 @@ public class MethodFilter extends Filter
 				filterNode = FilterNode.generate(map.get(TagHelper.Tag.FILTER), cout);
 			}
 
-		} catch (ClassNotFoundException e e)
+		} catch (ClassNotFoundException e)
 		{
 			throw new ParsingException(e);
 
@@ -67,19 +69,34 @@ public class MethodFilter extends Filter
 
 	@Override
 	public boolean shouldFilter(Object o)
-		throws IllegalAccessException, InvocationTargetException
+		throws FilteringException
 	{
-		if(!c.isInstance(o))
-		{
-			throw new InvalidFilterArgumentClassException(o.getClass(), c);
-		}
 
-		if(isLeaf)
+		// Avoid Null Pointer exception
+		try {
+			if(o==null)
+			{
+				return false;
+			}
+
+			if(!c.isInstance(o))
+			{
+				throw new InvalidFilterArgumentClassException(o.getClass(), c);
+			}
+
+			if(isLeaf)
+			{
+				return method.invoke(o).toString().equals(value);
+			} else 
+			{
+				return filterNode.shouldFilter(method.invoke(o));
+			}
+		} catch (IllegalAccessException e)
 		{
-			return method.invoke(o).toString().equals(value);
-		} else 
+			throw new FilteringException(e);
+		} catch (InvocationTargetException e)
 		{
-			return filterNode.shouldFilter(method.invoke(o));
+			throw new FilteringException(e);
 		}
 	}
 

@@ -4,8 +4,8 @@ public class C
 {
 	public int c;
 
-	public C()
+	public C(int i)
 	{
-		c = 2;
+		c = i;
 	}
 }

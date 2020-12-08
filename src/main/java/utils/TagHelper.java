@@ -11,7 +11,7 @@ public class TagHelper
 		METHOD("method"),
 		NAME("name"),
 		VALUE("value"),
-
+		CLASS("class"),
 		// Sentinel unk from string->tag conversion
 		UNK("unk");
 
@@ -57,6 +57,11 @@ public class TagHelper
 		if(s.equals("value"))
 		{
 			return Tag.VALUE;
+		}
+
+		if(s.equals("class"))
+		{
+			return Tag.CLASS;
 		}
 
 		return Tag.UNK;
