@@ -3,11 +3,11 @@
 		<name>b</name>
 		<filter>
 			<field>
-				<name>c</name>
+				<name>t</name>
 				<filter>
 					<field>
 						<name>c</name>
-						<value>2</value>
+						<value>1</value>
 					</field>
 				</filter>
 			</field>

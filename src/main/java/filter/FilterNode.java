@@ -5,7 +5,7 @@ import org.w3c.dom.*;
 import java.util.*;
 import utils.TagHelper;
 import utils.ITreeToString;
-import exceptions.InvalidTagException;
+import exceptions.parsing.InvalidTagException;
 import exceptions.InvalidFilterArgumentClassException;
 import java.lang.reflect.InvocationTargetException;
 
@@ -16,7 +16,7 @@ public class FilterNode implements ITreeToString
 	private Class c;
 
 	public FilterNode(Node root, Class paramClass)
-		throws NoSuchMethodException, NoSuchFieldException
+		throws ParsingException
 	{
 		filters = new ArrayList();
 		c = paramClass;
@@ -82,13 +82,13 @@ public class FilterNode implements ITreeToString
 	}
 
 	public static FilterNode generate(Node root, Class paramClass)
-		throws NoSuchMethodException, NoSuchFieldException
+		throws ParsingException
 	{
 		return new FilterNode(root, paramClass);
 	}
 
 	public static ArrayList<FilterNode> parse(Node root, Class paramClass)
-		throws NoSuchMethodException, NoSuchFieldException
+		throws ParsingException
 	{
 		ArrayList<FilterNode> filters = new ArrayList();
 		NodeList children = root.getChildNodes();

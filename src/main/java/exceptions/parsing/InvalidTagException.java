@@ -1,6 +1,6 @@
-package exceptions;
+package exceptions.parsing;
 
-public class InvalidTagException extends FilterException { 
+public class InvalidTagException extends ParsingException { 
     public InvalidTagException(String errorMessage) {
         super(errorMessage);
     }

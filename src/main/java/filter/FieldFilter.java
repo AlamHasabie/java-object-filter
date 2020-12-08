@@ -1,5 +1,6 @@
 package filter;
 
+import java.lang.ClassNotFoundException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
@@ -11,7 +12,8 @@ import org.w3c.dom.NodeList;
 
 import utils.TagHelper;
 import utils.PrimitiveWrapper;
-import exceptions.*;
+import exceptions.parsing.ParsingException;
+import exceptions.parsing.InvalidTargetClassException;
 
 public class FieldFilter extends Filter
 {
@@ -19,26 +21,51 @@ public class FieldFilter extends Filter
 	private Method toString;
 
 	public FieldFilter(Map<TagHelper.Tag, Node> map, Class cparam)
-		throws NoSuchMethodException, NoSuchFieldException
+		throws ParsingException
 	{
-		c = cparam;
-		field = cparam.getField(map.get(TagHelper.Tag.NAME).getTextContent());
-		Class cout = field.getType();
+		try {
+			c = cparam;
+			field = cparam.getField(map.get(TagHelper.Tag.NAME).getTextContent());
+			Class cout = field.getType();
 
-		if(cout.isPrimitive())
-		{
-			cout = PrimitiveWrapper.getWrapper(cout);
-		}
+			if(cout.isPrimitive())
+			{
+				cout = PrimitiveWrapper.getWrapper(cout);
+			}
 
-		if(map.containsKey(TagHelper.Tag.VALUE))
+			if(map.containsKey(TagHelper.Tag.CLASS))
+			{
+				Class ctarget = Class.forName(map.get(TagHelper.Tag.CLASS));
+				if(!cout.isAssignableFrom(ctarget))
+				{
+					throw new InvalidTargetClassException;
+				}
+
+				cout = ctarget;
+			}
+
+			if(map.containsKey(TagHelper.Tag.VALUE))
+			{
+				isLeaf = true;
+				toString = cout.getMethod("toString");
+				value = map.get(TagHelper.Tag.VALUE).getTextContent();
+			} else 
+			{
+				isLeaf = false;
+				filterNode = FilterNode.generate(map.get(TagHelper.Tag.FILTER), cout);
+			}
+
+		} catch (ClassNotFoundException e)
 		{
-			isLeaf = true;
-			toString = cout.getMethod("toString");
-			value = map.get(TagHelper.Tag.VALUE).getTextContent();
-		} else 
+			throw new ParsingException(e);
+
+		} catch (NoSuchMethodException e)
 		{
-			isLeaf = false;
-			filterNode = FilterNode.generate(map.get(TagHelper.Tag.FILTER), cout);
+			throw new ParsingException(e);
+
+		} catch (NoSuchFieldException e)
+		{
+			throw new ParsingException(e);
 		}
 	}
 
@@ -74,7 +101,7 @@ public class FieldFilter extends Filter
 	}
 
 	public static FieldFilter generate(Node root, Class cparam)
-		throws NoSuchMethodException, NoSuchFieldException
+		throws ParsingException
 	{
 		return new FieldFilter(Filter.buildTagMap(root), cparam);
 	}

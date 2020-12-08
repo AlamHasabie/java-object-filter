@@ -7,7 +7,6 @@ public class A
 	private int c;
 	public A(){
 		a = 0;
-		b = new B();
 		c = 1;
 	}
 
