@@ -15,7 +15,6 @@ import utils.PrimitiveWrapper;
 import exceptions.parsing.ParsingException;
 import exceptions.parsing.InvalidTargetClassException;
 import exceptions.filtering.FilteringException;
-import exceptions.filtering.InvalidFilterArgumentClassException;
 
 public class FieldFilter extends Filter
 {
@@ -83,7 +82,7 @@ public class FieldFilter extends Filter
 
 			if(!c.isInstance(o))
 			{
-				throw new InvalidFilterArgumentClassException(o.getClass(), c);
+				return false;
 			}
 
 			if(isLeaf)

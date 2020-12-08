@@ -10,7 +10,6 @@ import exceptions.parsing.ParsingException;
 import java.lang.reflect.InvocationTargetException;
 
 import exceptions.filtering.FilteringException;
-import exceptions.filtering.InvalidFilterArgumentClassException;
 
 public class FilterNode implements ITreeToString 
 {
@@ -76,7 +75,7 @@ public class FilterNode implements ITreeToString
 
 		if(!c.isInstance(o))
 		{
-			throw new InvalidFilterArgumentClassException(o.getClass(), c);
+			return false;
 		}
 
 		for(Filter filter : filters)

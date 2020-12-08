@@ -14,7 +14,6 @@ import utils.TagHelper;
 import exceptions.parsing.ParsingException;
 import exceptions.parsing.InvalidTargetClassException;
 import exceptions.filtering.FilteringException;
-import exceptions.filtering.InvalidFilterArgumentClassException;
 
 public class MethodFilter extends Filter
 {
@@ -81,7 +80,7 @@ public class MethodFilter extends Filter
 
 			if(!c.isInstance(o))
 			{
-				throw new InvalidFilterArgumentClassException(o.getClass(), c);
+				return false;
 			}
 
 			if(isLeaf)
