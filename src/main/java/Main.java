@@ -2,7 +2,7 @@ import org.w3c.dom.*;
 import conf.Loader;
 import filter.FilterNode;
 import java.lang.reflect.*;
-import sampleclass.A;
+import sampleclass.*;
 import java.util.*;
 
 public class Main
@@ -16,10 +16,16 @@ public class Main
 			Node root = doc.getDocumentElement();
 			ArrayList<FilterNode> filters = FilterNode.parse(doc, target);
 
+
+			// Driver object 
+			A a  = new A();
+			a.b = new B<A>();
+			a.b.t = new A();
+
 			for(FilterNode filter : filters)
 			{
 				System.out.println(filter.toString());
-				System.out.println(filter.shouldFilter(new A()));
+				System.out.println(filter.shouldFilter(a));
 			}
 			
 		} catch (Exception e)

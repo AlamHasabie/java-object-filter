@@ -1,13 +1,12 @@
 package sampleclass;
 
-public class B
+public class B<T>
 {
 	public int b;
-	public C c;
+	public T t;
 
 	public B()
 	{
 		b = 1;
-		c = new C();
 	}
 }

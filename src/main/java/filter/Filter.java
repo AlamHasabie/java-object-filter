@@ -10,7 +10,8 @@ import org.w3c.dom.NodeList;
 
 import utils.ITreeToString;
 import utils.TagHelper;
-import exceptions.*;
+import exceptions.parsing.*;
+import exceptions.filtering.*;
 
 
 public abstract class Filter implements ITreeToString
@@ -21,13 +22,13 @@ public abstract class Filter implements ITreeToString
 	protected String value;
 
 	public abstract boolean shouldFilter(Object o)
-		throws IllegalAccessException, InvocationTargetException;
+		throws FilteringException;
 
 	/** Throws unchecked FilterException , which should propagate to
 	{@link filter.FilterNode#parse(Node root, Class paramClass)}
 	*/
 	public static Map<TagHelper.Tag, Node> buildTagMap(Node root)
-		throws NoSuchMethodException, NoSuchFieldException
+		throws ParsingException
 	{
 		Map<TagHelper.Tag, Node> nodeMap = new HashMap();
 		NodeList nodeList = root.getChildNodes();
@@ -71,6 +72,10 @@ public abstract class Filter implements ITreeToString
 						);
 					}
 					nodeMap.put(TagHelper.Tag.FILTER, node);
+					break;
+
+				case CLASS :
+					nodeMap.put(TagHelper.Tag.CLASS, node);
 					break;
 
 				default :

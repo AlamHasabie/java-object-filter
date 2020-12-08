@@ -5,9 +5,11 @@ import org.w3c.dom.*;
 import java.util.*;
 import utils.TagHelper;
 import utils.ITreeToString;
-import exceptions.InvalidTagException;
-import exceptions.InvalidFilterArgumentClassException;
+import exceptions.parsing.InvalidTagException;
+import exceptions.parsing.ParsingException;
 import java.lang.reflect.InvocationTargetException;
+
+import exceptions.filtering.FilteringException;
 
 public class FilterNode implements ITreeToString 
 {
@@ -16,7 +18,7 @@ public class FilterNode implements ITreeToString
 	private Class c;
 
 	public FilterNode(Node root, Class paramClass)
-		throws NoSuchMethodException, NoSuchFieldException
+		throws ParsingException
 	{
 		filters = new ArrayList();
 		c = paramClass;
@@ -64,11 +66,16 @@ public class FilterNode implements ITreeToString
 	}
 
 	public boolean shouldFilter(Object o)
-		throws IllegalAccessException, InvocationTargetException
+		throws FilteringException
 	{
+		if(o==null)
+		{
+			return false;
+		}
+
 		if(!c.isInstance(o))
 		{
-			throw new InvalidFilterArgumentClassException(o.getClass(), c);
+			return false;
 		}
 
 		for(Filter filter : filters)
@@ -82,13 +89,13 @@ public class FilterNode implements ITreeToString
 	}
 
 	public static FilterNode generate(Node root, Class paramClass)
-		throws NoSuchMethodException, NoSuchFieldException
+		throws ParsingException
 	{
 		return new FilterNode(root, paramClass);
 	}
 
 	public static ArrayList<FilterNode> parse(Node root, Class paramClass)
-		throws NoSuchMethodException, NoSuchFieldException
+		throws ParsingException
 	{
 		ArrayList<FilterNode> filters = new ArrayList();
 		NodeList children = root.getChildNodes();

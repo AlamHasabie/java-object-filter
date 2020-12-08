@@ -1,5 +1,6 @@
 package filter;
 
+import java.lang.ClassNotFoundException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
@@ -11,7 +12,9 @@ import org.w3c.dom.NodeList;
 
 import utils.TagHelper;
 import utils.PrimitiveWrapper;
-import exceptions.*;
+import exceptions.parsing.ParsingException;
+import exceptions.parsing.InvalidTargetClassException;
+import exceptions.filtering.FilteringException;
 
 public class FieldFilter extends Filter
 {
@@ -19,44 +22,79 @@ public class FieldFilter extends Filter
 	private Method toString;
 
 	public FieldFilter(Map<TagHelper.Tag, Node> map, Class cparam)
-		throws NoSuchMethodException, NoSuchFieldException
+		throws ParsingException
 	{
-		c = cparam;
-		field = cparam.getField(map.get(TagHelper.Tag.NAME).getTextContent());
-		Class cout = field.getType();
+		try {
+			c = cparam;
+			field = cparam.getField(map.get(TagHelper.Tag.NAME).getTextContent());
+			Class cout = field.getType();
 
-		if(cout.isPrimitive())
-		{
-			cout = PrimitiveWrapper.getWrapper(cout);
-		}
+			if(cout.isPrimitive())
+			{
+				cout = PrimitiveWrapper.getWrapper(cout);
+			}
 
-		if(map.containsKey(TagHelper.Tag.VALUE))
+			if(map.containsKey(TagHelper.Tag.CLASS))
+			{
+				Class ctarget = Class.forName(map.get(TagHelper.Tag.CLASS).getTextContent());
+				if(!cout.isAssignableFrom(ctarget))
+				{
+					throw new InvalidTargetClassException(ctarget, cout);
+				}
+
+				cout = ctarget;
+			}
+
+			if(map.containsKey(TagHelper.Tag.VALUE))
+			{
+				isLeaf = true;
+				toString = cout.getMethod("toString");
+				value = map.get(TagHelper.Tag.VALUE).getTextContent();
+			} else 
+			{
+				isLeaf = false;
+				filterNode = FilterNode.generate(map.get(TagHelper.Tag.FILTER), cout);
+			}
+
+		} catch (ClassNotFoundException e)
 		{
-			isLeaf = true;
-			toString = cout.getMethod("toString");
-			value = map.get(TagHelper.Tag.VALUE).getTextContent();
-		} else 
+			throw new ParsingException(e);
+
+		} catch (NoSuchMethodException e)
 		{
-			isLeaf = false;
-			filterNode = FilterNode.generate(map.get(TagHelper.Tag.FILTER), cout);
+			throw new ParsingException(e);
+
+		} catch (NoSuchFieldException e)
+		{
+			throw new ParsingException(e);
 		}
 	}
 
 	@Override
 	public boolean shouldFilter(Object o)
-		throws IllegalAccessException, InvocationTargetException
+		throws FilteringException
 	{
-		if(!c.isInstance(o))
-		{
-			throw new InvalidFilterArgumentClassException(o.getClass(), c);
-		}
+		try {
+			if(o==null)
+			{
+				return false;
+			}
 
-		if(isLeaf)
+			if(!c.isInstance(o))
+			{
+				return false;
+			}
+
+			if(isLeaf)
+			{
+				return field.get(o).toString().equals(value);
+			} else 
+			{
+				return filterNode.shouldFilter(field.get(o));
+			}
+		} catch (IllegalAccessException e)
 		{
-			return field.get(o).toString().equals(value);
-		} else 
-		{
-			return filterNode.shouldFilter(field.get(o));
+			throw new FilteringException(e);
 		}
 	}
 
@@ -74,7 +112,7 @@ public class FieldFilter extends Filter
 	}
 
 	public static FieldFilter generate(Node root, Class cparam)
-		throws NoSuchMethodException, NoSuchFieldException
+		throws ParsingException
 	{
 		return new FieldFilter(Filter.buildTagMap(root), cparam);
 	}

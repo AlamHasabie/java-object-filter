@@ -1,6 +1,6 @@
-package exceptions;
+package exceptions.parsing;
 
-public class MissingReturnException extends FilterException { 
+public class MissingReturnException extends ParsingException { 
     public MissingReturnException(String errorMessage) {
         super(errorMessage);
     }

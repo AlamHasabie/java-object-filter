@@ -1,6 +1,6 @@
-package exceptions;
+package exceptions.parsing;
 
-public class MissingNameException extends FilterException { 
+public class MissingNameException extends ParsingException { 
     public MissingNameException(String errorMessage) {
         super(errorMessage);
     }
