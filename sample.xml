@@ -1,6 +1,31 @@
-<filter>
-	<field>
-		<name>e</name>
-		<value>Y</value>
-	</field>
-</filter>
+<configuration>
+	<group>
+		<target>edu.uchicago.cs.ucare.wrapper.MessageInWrapper</target>
+		<filter>
+			<field>
+				<name>m</name>
+				<filter>
+					<field>
+						<name>payload</name>
+						<class>org.apache.cassandra.db.ReadCommand</class>
+						<filter>
+							<method>
+								<name>metadata</name>
+								<filter>
+									<field>
+										<name>ksName</name>
+										<value>test</value>
+									</field>
+									<field>
+										<name>cfName</name>
+										<value>test</value>
+									</field>
+								</filter>
+							</method>
+						</filter>
+					</field>
+				</filter>
+			</field>
+		</filter>
+	</group>
+</configuration>
