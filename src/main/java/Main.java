@@ -19,8 +19,6 @@ public class Main
 
 			// Driver object 
 			A a  = new A();
-			a.b = new B<A>();
-			a.b.t = new A();
 
 			for(FilterNode filter : filters)
 			{

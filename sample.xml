@@ -1,17 +1,6 @@
 <filter>
 	<field>
-		<name>b</name>
-		<filter>
-			<field>
-				<name>t</name>
-				<class>sampleclass.C</class>
-				<filter>
-					<field>
-						<name>c</name>
-						<value>1</value>
-					</field>
-				</filter>
-			</field>
-		</filter>
+		<name>e</name>
+		<value>Y</value>
 	</field>
 </filter>
