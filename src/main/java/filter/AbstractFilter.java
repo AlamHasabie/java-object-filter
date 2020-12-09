@@ -10,8 +10,9 @@ import org.w3c.dom.NodeList;
 
 import utils.ITreeToString;
 import utils.TagHelper;
-import exceptions.parsing.*;
-import exceptions.filtering.*;
+import exceptions.ParsingException;
+import exceptions.SyntaxException;
+import exceptions.FilteringException;
 
 
 public abstract class AbstractFilter implements ITreeToString
@@ -43,7 +44,7 @@ public abstract class AbstractFilter implements ITreeToString
 			TagHelper.Tag currentTag = TagHelper.fromString(node.getNodeName());
 			if(nodeMap.containsKey(currentTag))
 			{
-				throw new DuplicateTagException(
+				throw new SyntaxException(
 					"Duplicated tag " + currentTag.val + " found" 
 				);
 			}
@@ -57,7 +58,7 @@ public abstract class AbstractFilter implements ITreeToString
 				case VALUE :
 					if(nodeMap.containsKey(TagHelper.Tag.FILTER))
 					{
-						throw new TagConflictException(
+						throw new SyntaxException(
 							"FILTER and VALUE cannot coexist"
 						);
 					}
@@ -67,7 +68,7 @@ public abstract class AbstractFilter implements ITreeToString
 				case FILTER :
 					if(nodeMap.containsKey(TagHelper.Tag.VALUE))
 					{
-						throw new TagConflictException(
+						throw new SyntaxException(
 							"FILTER and VALUE cannot coexist"
 						);
 					}
@@ -79,7 +80,7 @@ public abstract class AbstractFilter implements ITreeToString
 					break;
 
 				default :
-					throw new InvalidTagException(
+					throw new SyntaxException(
 						"Invalid tag " + root.getNodeName() + " found"
 					);
 			}
@@ -87,7 +88,7 @@ public abstract class AbstractFilter implements ITreeToString
 
 		if(!nodeMap.containsKey(TagHelper.Tag.NAME))
 		{
-			throw new MissingNameException("Missing name tag");
+			throw new SyntaxException("Missing name tag");
 		}
 
 		if(!(
@@ -95,7 +96,7 @@ public abstract class AbstractFilter implements ITreeToString
 			|| nodeMap.containsKey(TagHelper.Tag.VALUE)
 		))
 		{
-			throw new MissingReturnException("Missing return (filter or value) tag");
+			throw new SyntaxException("Missing return (filter or value) tag");
 		}
 
 		return nodeMap;

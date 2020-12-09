@@ -1,4 +1,4 @@
-package exceptions.parsing;
+package exceptions;
 
 public class ParsingException extends Exception {
 	public ParsingException(Throwable cause)

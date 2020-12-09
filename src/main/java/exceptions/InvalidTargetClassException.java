@@ -1,4 +1,4 @@
-package exceptions.parsing;
+package exceptions;
 
 public class InvalidTargetClassException extends ParsingException { 
     public InvalidTargetClassException(Class arg, Class expected) 

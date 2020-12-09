@@ -5,11 +5,12 @@ import org.w3c.dom.*;
 import java.util.*;
 import utils.TagHelper;
 import utils.ITreeToString;
-import exceptions.parsing.InvalidTagException;
-import exceptions.parsing.ParsingException;
+
 import java.lang.reflect.InvocationTargetException;
 
-import exceptions.filtering.FilteringException;
+import exceptions.FilteringException;
+import exceptions.ParsingException;
+import exceptions.SyntaxException;
 
 public class FilterNode implements ITreeToString 
 {
@@ -36,7 +37,7 @@ public class FilterNode implements ITreeToString
 					filters.add(MethodFilter.generate(node, paramClass));
 				} else 
 				{
-					throw new InvalidTagException(
+					throw new SyntaxException(
 						"Invalid tag " + node.getNodeName() + " during filter parsing"
 					);
 				}

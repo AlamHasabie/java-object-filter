@@ -7,8 +7,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import exceptions.parsing.ParsingException;
-import exceptions.parsing.InvalidTagException;
+import exceptions.ParsingException;
+import exceptions.SyntaxException;
 import utils.TagHelper;
 import utils.TagHelper.Tag;
 
@@ -27,7 +27,7 @@ public class Factory
 			{
 				if(!TagHelper.tagEquals(child, Tag.GROUP))
 				{
-					throw new InvalidTagException("Expecting <group> tag");
+					throw new SyntaxException("Expecting <group> tag");
 				}
 				
 				groups.add(new Group(child));

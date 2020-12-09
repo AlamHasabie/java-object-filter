@@ -1,4 +1,4 @@
-package exceptions.filtering;
+package exceptions;
 
 public class FilteringException extends Exception { 
 	public FilteringException(Throwable cause)

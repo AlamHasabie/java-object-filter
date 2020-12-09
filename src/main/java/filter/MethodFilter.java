@@ -11,9 +11,9 @@ import org.w3c.dom.NodeList;
 
 import utils.PrimitiveWrapper;
 import utils.TagHelper;
-import exceptions.parsing.ParsingException;
-import exceptions.parsing.InvalidTargetClassException;
-import exceptions.filtering.FilteringException;
+import exceptions.ParsingException;
+import exceptions.InvalidTargetClassException;
+import exceptions.FilteringException;
 
 public class MethodFilter extends AbstractFilter
 {

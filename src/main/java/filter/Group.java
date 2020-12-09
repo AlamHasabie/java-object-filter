@@ -8,10 +8,10 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import exceptions.filtering.FilteringException;
-import exceptions.parsing.InvalidTargetClassException;
-import exceptions.parsing.InvalidTagException;
-import exceptions.parsing.ParsingException;
+import exceptions.FilteringException;
+import exceptions.InvalidTargetClassException;
+import exceptions.ParsingException;
+import exceptions.SyntaxException;
 
 import utils.TagHelper;
 import utils.ITreeToString;
@@ -34,7 +34,7 @@ public class Group implements ITreeToString
     		{
     			if (!TagHelper.tagEquals(child, TagHelper.Tag.FILTER))
     			{
-    				throw new InvalidTagException(
+    				throw new SyntaxException(
     					"Invalid tag " + child.getNodeName() + " in group parsing"
     				);
     			}
@@ -85,13 +85,13 @@ public class Group implements ITreeToString
 			NamedNodeMap map = root.getAttributes();
 			if(map == null)
 			{
-				throw new ParsingException("<group> tag has no \"target\" attribute");
+				throw new SyntaxException("<group> tag has no \"target\" attribute");
 			}
 
 			Node n = map.getNamedItem("target");
 			if(n == null)
 			{
-				throw new ParsingException("<group> tag has no \"target\" attribute");
+				throw new SyntaxException("<group> tag has no \"target\" attribute");
 			}
 
 			return Class.forName(n.getNodeValue());
