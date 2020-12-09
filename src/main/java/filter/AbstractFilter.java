@@ -14,7 +14,7 @@ import exceptions.parsing.*;
 import exceptions.filtering.*;
 
 
-public abstract class Filter implements ITreeToString
+public abstract class AbstractFilter implements ITreeToString
 {
 	protected FilterNode filterNode;
 	protected Class c;

@@ -15,7 +15,7 @@ import exceptions.parsing.ParsingException;
 import exceptions.parsing.InvalidTargetClassException;
 import exceptions.filtering.FilteringException;
 
-public class MethodFilter extends Filter
+public class MethodFilter extends AbstractFilter
 {
 	private Method method;
 
@@ -114,6 +114,6 @@ public class MethodFilter extends Filter
 	public static MethodFilter generate(Node root, Class cparam)
 		throws ParsingException
 	{
-		return new MethodFilter(Filter.buildTagMap(root), cparam);
+		return new MethodFilter(AbstractFilter.buildTagMap(root), cparam);
 	}
 }

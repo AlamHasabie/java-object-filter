@@ -1,6 +1,8 @@
-<filter>
-	<field>
-		<name>e</name>
-		<value>Y</value>
-	</field>
-</filter>
+<group target="sampleclass.A">
+	<filter>
+		<field>
+			<name>e</name>
+			<value>Y</value>
+		</field>
+	</filter>
+</group>

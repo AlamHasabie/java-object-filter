@@ -11,6 +11,8 @@ public class A
 
 
 	public E e;
+	public B b;
+
 	public A()
 	{
 		e = E.Y;

@@ -1,6 +1,8 @@
 import org.w3c.dom.*;
 import conf.Loader;
+import filter.Factory;
 import filter.FilterNode;
+import filter.Group;
 import java.lang.reflect.*;
 import sampleclass.*;
 import java.util.*;
@@ -12,18 +14,17 @@ public class Main
 		try 
 		{
 			Document doc = Loader.load("sample.xml");
-			Class target = A.class;
 			Node root = doc.getDocumentElement();
-			ArrayList<FilterNode> filters = FilterNode.parse(doc, target);
 
+			List<Group> groups = Factory.parse(doc);
 
 			// Driver object 
 			A a  = new A();
 
-			for(FilterNode filter : filters)
+			for(Group group : groups)
 			{
-				System.out.println(filter.toString());
-				System.out.println(filter.shouldFilter(a));
+				System.out.println(group.toString());
+				System.out.println(group.shouldFilter(a));
 			}
 			
 		} catch (Exception e)

@@ -16,7 +16,7 @@ import exceptions.parsing.ParsingException;
 import exceptions.parsing.InvalidTargetClassException;
 import exceptions.filtering.FilteringException;
 
-public class FieldFilter extends Filter
+public class FieldFilter extends AbstractFilter
 {
 	private Field field;
 
@@ -113,6 +113,6 @@ public class FieldFilter extends Filter
 	public static FieldFilter generate(Node root, Class cparam)
 		throws ParsingException
 	{
-		return new FieldFilter(Filter.buildTagMap(root), cparam);
+		return new FieldFilter(AbstractFilter.buildTagMap(root), cparam);
 	}
 }
