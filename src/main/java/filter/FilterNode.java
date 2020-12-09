@@ -93,27 +93,4 @@ public class FilterNode implements ITreeToString
 	{
 		return new FilterNode(root, paramClass);
 	}
-
-	public static ArrayList<FilterNode> parse(Node root, Class paramClass)
-		throws ParsingException
-	{
-		ArrayList<FilterNode> filters = new ArrayList();
-		NodeList children = root.getChildNodes();
-		for (int i = 0; i < children.getLength(); i++) {
-    		if(TagHelper.isElement(children.item(i)))
-    		{
-    			if (!TagHelper.tagEquals(children.item(i), TagHelper.Tag.FILTER))
-    			{
-    				throw new InvalidTagException(
-    					"Invalid tag " + children.item(i).getNodeName() + " found during parsing"
-    				);
-    			}
-
-				filters.add(new FilterNode(children.item(i), paramClass));
-    		}
-		}
-
-		return filters;
-	}
-
 }

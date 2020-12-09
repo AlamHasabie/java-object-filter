@@ -1,28 +1,8 @@
-<group target="edu.uchicago.cs.ucare.dmck.wrapper.MessageInWrapper">
+<group target="sampleclass.A">
 	<filter>
 		<field>
-			<name>m</name>
-			<filter>
-				<field>
-					<name>payload</name>
-					<class>org.apache.cassandra.db.ReadCommand</class>
-					<filter>
-						<method>
-							<name>metadata</name>
-							<filter>
-								<field>
-									<name>ksName</name>
-									<value>test</value>
-								</field>
-								<field>
-									<name>cfName</name>
-									<value>test</value>
-								</field>
-							</filter>
-						</method>
-					</filter>
-				</field>
-			</filter>
+			<name>e</name>
+			<value>Y</value>
 		</field>
 	</filter>
 </group>
