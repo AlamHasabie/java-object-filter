@@ -21,53 +21,11 @@ public class FieldFilter extends AbstractFilter
 {
 	private Field field;
 
-	public FieldFilter(Map<TagHelper.Tag, Node> map, Class cparam)
+	public FieldFilter(Map<TagHelper.Tag, Node> map, Class cparam, Field f)
 		throws ParsingException
 	{
-		try {
-			c = cparam;
-			field = cparam.getField(map.get(TagHelper.Tag.NAME).getTextContent());
-			Class cout = field.getType();
-
-			if(cout.isPrimitive())
-			{
-				cout = PrimitiveWrapper.getWrapper(cout);
-			}
-
-			if(map.containsKey(TagHelper.Tag.CLASS))
-			{
-				Class ctarget = Class.forName(map.get(TagHelper.Tag.CLASS).getTextContent());
-				if(!cout.isAssignableFrom(ctarget))
-				{
-					throw new InvalidTargetClassException(ctarget, cout);
-				}
-
-				cout = ctarget;
-			}
-
-			if(map.containsKey(TagHelper.Tag.VALUE))
-			{
-				isLeaf = true;
-				cout.getMethod("toString");
-				value = map.get(TagHelper.Tag.VALUE).getTextContent();
-			} else 
-			{
-				isLeaf = false;
-				filterNode = FilterNode.generate(map.get(TagHelper.Tag.FILTER), cout);
-			}
-
-		} catch (ClassNotFoundException e)
-		{
-			throw new ParsingException(e);
-
-		} catch (NoSuchMethodException e)
-		{
-			throw new ParsingException(e);
-
-		} catch (NoSuchFieldException e)
-		{
-			throw new ParsingException(e);
-		}
+		super(map, cparam, f.getType());
+		field = f;
 	}
 
 	@Override
@@ -80,18 +38,23 @@ public class FieldFilter extends AbstractFilter
 				return false;
 			}
 
-			if(!c.isInstance(o))
+			if(!cin.isInstance(o))
 			{
 				return false;
 			}
 
-			if(isLeaf)
-			{
-				return field.get(o).toString().equals(value);
-			} else 
+			if(filterNode != null)
 			{
 				return filterNode.shouldFilter(field.get(o));
 			}
+
+			if(value != null)
+			{
+				return field.get(o).toString().equals(value);
+			}
+
+			return cout.isInstance(field.get(o));
+
 		} catch (IllegalAccessException e)
 		{
 			throw new FilteringException(e);
@@ -101,9 +64,15 @@ public class FieldFilter extends AbstractFilter
 	public void toString(StringBuilder builder, int depth)
 	{
 		addTreeIndent(builder, depth);
-		if(isLeaf)
+		if(filterNode==null)
 		{
-			builder.append("leaf-field:{" + field.toString() + "} val:" + value + "\n");
+			if(value==null)
+			{
+				builder.append("leaf-field:{" + field.toString() + "} class: " + cout);
+			} else {
+				builder.append("leaf-field:{" + field.toString() + "} val:" + value + "\n");
+			}
+			
 		} else 
 		{
 			builder.append("field:{" + field.toString() + "}\n");
@@ -114,6 +83,14 @@ public class FieldFilter extends AbstractFilter
 	public static FieldFilter generate(Node root, Class cparam)
 		throws ParsingException
 	{
-		return new FieldFilter(AbstractFilter.buildTagMap(root), cparam);
+		try {
+			Map<TagHelper.Tag, Node> map = AbstractFilter.buildTagMap(root);
+			Field field = cparam.getField(map.get(TagHelper.Tag.NAME).getTextContent());
+			return new FieldFilter(map, cparam, field);
+		} catch (NoSuchFieldException e)
+		{
+			throw new ParsingException(e);
+		}
+
 	}
 }

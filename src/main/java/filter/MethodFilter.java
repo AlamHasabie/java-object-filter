@@ -20,50 +20,11 @@ public class MethodFilter extends AbstractFilter
 {
 	private Method method;
 
-	public MethodFilter(Map<TagHelper.Tag, Node> map, Class cparam)
+	public MethodFilter(Map<TagHelper.Tag, Node> map, Class cparam, Method m)
 		throws ParsingException
 	{
-		try {
-
-			c = cparam;
-			method = cparam.getMethod(map.get(TagHelper.Tag.NAME).getTextContent());
-			Class cout = method.getReturnType();
-
-			if(cout.isPrimitive())
-			{
-				cout = PrimitiveWrapper.getWrapper(cout);
-			}
-
-			if(map.containsKey(TagHelper.Tag.CLASS))
-			{
-				Class ctarget = Class.forName(map.get(TagHelper.Tag.CLASS).getTextContent());
-				if(!cout.isAssignableFrom(ctarget))
-				{
-					throw new InvalidTargetClassException(ctarget, cout);
-				}
-
-				cout = ctarget;
-			}
-
-			if(map.containsKey(TagHelper.Tag.VALUE))
-			{
-				isLeaf = true;
-				cout.getMethod("toString");
-				value = map.get(TagHelper.Tag.VALUE).getTextContent();
-			} else 
-			{
-				isLeaf = false;
-				filterNode = FilterNode.generate(map.get(TagHelper.Tag.FILTER), cout);
-			}
-
-		} catch (ClassNotFoundException e)
-		{
-			throw new ParsingException(e);
-
-		} catch (NoSuchMethodException e)
-		{
-			throw new ParsingException(e);
-		}
+		super(map, cparam, m.getReturnType());
+		method = m;
 	}
 
 	@Override
@@ -71,25 +32,29 @@ public class MethodFilter extends AbstractFilter
 		throws FilteringException
 	{
 
-		// Avoid Null Pointer exception
 		try {
 			if(o==null)
 			{
 				return false;
 			}
 
-			if(!c.isInstance(o))
+			if(!cin.isInstance(o))
 			{
 				return false;
 			}
 
-			if(isLeaf)
+			if(filterNode != null)
 			{
 				return method.invoke(o).toString().equals(value);
-			} else 
-			{
-				return filterNode.shouldFilter(method.invoke(o));
 			}
+
+			if(value != null)
+			{
+				return method.invoke(o).toString().equals(value);
+			}
+
+			return cout.isInstance(method.invoke(o));
+		
 		} catch (IllegalAccessException e)
 		{
 			throw new FilteringException(e);
@@ -102,9 +67,15 @@ public class MethodFilter extends AbstractFilter
 	public void toString(StringBuilder builder, int depth)
 	{
 		addTreeIndent(builder, depth);
-		if(isLeaf)
+		if(filterNode==null)
 		{
-			builder.append("leaf-method:{" + method.toString() + "} val:" + value + "\n");
+			if(value==null)
+			{
+				builder.append("leaf-method:{" + method.toString() + "} class: " + cout);
+			} else {
+				builder.append("leaf-method:{" + method.toString() + "} val:" + value + "\n");
+			}
+
 		} else 
 		{
 			builder.append("method:{" + method.toString() + "}\n");
@@ -115,6 +86,13 @@ public class MethodFilter extends AbstractFilter
 	public static MethodFilter generate(Node root, Class cparam)
 		throws ParsingException
 	{
-		return new MethodFilter(AbstractFilter.buildTagMap(root), cparam);
+		try {
+			Map<TagHelper.Tag, Node> map = AbstractFilter.buildTagMap(root);
+			Method method = cparam.getMethod(map.get(TagHelper.Tag.NAME).getTextContent());
+			return new MethodFilter(map, cparam, method);
+		} catch (NoSuchMethodException e)
+		{
+			throw new ParsingException(e);
+		}
 	}
 }

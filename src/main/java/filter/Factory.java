@@ -27,7 +27,7 @@ public class Factory
 		throws ParsingException, ConfigurationLoadingException
 	{
 		try {
-			return parse(FilterConfigurationLoader.load("/home/alam/cass-conf/conf.xml"));
+			return parse(FilterConfigurationLoader.load("sample.xml"));
 
 		} catch (IOException e)
 		{

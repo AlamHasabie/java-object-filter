@@ -8,22 +8,74 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import util.ITreeToString;
+import util.PrimitiveWrapper;
 import util.TagHelper;
+
+import exceptions.InvalidTargetClassException;
 import exceptions.ParsingException;
 import exceptions.SyntaxException;
 import exceptions.FilteringException;
 
-
+/** The parent class should know how to build itself */
+/** However, it's up to the subclass how to handle the filtering */
 public abstract class AbstractFilter implements ITreeToString
 {
 	protected FilterNode filterNode;
-	protected Class c;
-	protected boolean isLeaf;
+	protected Class cin;
+	protected Class cout;
 	protected String value;
 
 	public abstract boolean shouldFilter(Object o)
 		throws FilteringException;
 
+
+	protected AbstractFilter(Map<TagHelper.Tag, Node> map, Class cparam, Class cto)
+		throws ParsingException
+	{
+		try {
+			// Null safety
+			filterNode = null;
+			value = null;
+			cin = cparam;
+			cout = cto;
+
+			if(cout.isPrimitive())
+			{
+				cout = PrimitiveWrapper.getWrapper(cout);
+			}
+
+			if(map.containsKey(TagHelper.Tag.CLASS))
+			{
+				Class ctarget = Class.forName(map.get(TagHelper.Tag.CLASS).getTextContent());
+				if(!cout.isAssignableFrom(ctarget))
+				{
+					throw new InvalidTargetClassException(ctarget, cout);
+				}
+
+				cout = ctarget;
+			}
+
+			if(map.containsKey(TagHelper.Tag.FILTER))
+			{
+				filterNode = FilterNode.generate(map.get(TagHelper.Tag.FILTER), cout);
+			} else 
+			{
+				if(map.containsKey(TagHelper.Tag.VALUE))
+				{
+					// Ensure toString method exists for this class
+					cout.getMethod("toString");
+					value = map.get(TagHelper.Tag.VALUE).getTextContent();
+				}
+			}
+		} catch (ClassNotFoundException e)
+		{
+			throw new ParsingException(e);
+		} catch (NoSuchMethodException e)
+		{
+			throw new ParsingException(e);
+		}
+	}
+	
 	public static Map<TagHelper.Tag, Node> buildTagMap(Node root)
 		throws ParsingException
 	{
@@ -90,9 +142,10 @@ public abstract class AbstractFilter implements ITreeToString
 		if(!(
 			nodeMap.containsKey(TagHelper.Tag.FILTER)
 			|| nodeMap.containsKey(TagHelper.Tag.VALUE)
+			|| nodeMap.containsKey(TagHelper.Tag.CLASS)
 		))
 		{
-			throw new SyntaxException("Missing return (filter or value) tag");
+			throw new SyntaxException("Missing filter, value, or class tag");
 		}
 
 		return nodeMap;
