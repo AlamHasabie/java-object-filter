@@ -1,4 +1,4 @@
-package utils;
+package util;
 
 import org.w3c.dom.*;
 

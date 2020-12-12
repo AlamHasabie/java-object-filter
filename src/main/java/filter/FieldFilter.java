@@ -10,12 +10,12 @@ import java.util.Map;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import utils.TagHelper;
-import utils.PrimitiveWrapper;
-import exceptions.ParsingException;
-import exceptions.SyntaxException;
-import exceptions.InvalidTargetClassException;
+import util.TagHelper;
+import util.PrimitiveWrapper;
+
 import exceptions.FilteringException;
+import exceptions.InvalidTargetClassException;
+import exceptions.ParsingException;
 
 public class FieldFilter extends AbstractFilter
 {

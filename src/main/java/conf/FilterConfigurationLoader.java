@@ -7,7 +7,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-public class Loader
+public class FilterConfigurationLoader
 {
 	public static Document load(String filename)
 		throws IOException, SAXException, ParserConfigurationException

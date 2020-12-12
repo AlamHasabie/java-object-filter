@@ -8,13 +8,13 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import util.ITreeToString;
+import util.TagHelper;
+
 import exceptions.FilteringException;
 import exceptions.InvalidTargetClassException;
 import exceptions.ParsingException;
 import exceptions.SyntaxException;
-
-import utils.TagHelper;
-import utils.ITreeToString;
 
 public class Group implements ITreeToString
 {

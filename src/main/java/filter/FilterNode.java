@@ -1,12 +1,12 @@
 package filter;
 
-
 import org.w3c.dom.*;
 import java.util.*;
-import utils.TagHelper;
-import utils.ITreeToString;
 
 import java.lang.reflect.InvocationTargetException;
+
+import util.ITreeToString;
+import util.TagHelper;
 
 import exceptions.FilteringException;
 import exceptions.ParsingException;

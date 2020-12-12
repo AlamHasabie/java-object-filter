@@ -9,11 +9,12 @@ import java.util.Map;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import utils.PrimitiveWrapper;
-import utils.TagHelper;
-import exceptions.ParsingException;
-import exceptions.InvalidTargetClassException;
+import util.TagHelper;
+import util.PrimitiveWrapper;
+
 import exceptions.FilteringException;
+import exceptions.InvalidTargetClassException;
+import exceptions.ParsingException;
 
 public class MethodFilter extends AbstractFilter
 {

@@ -4,12 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.lang.reflect.InvocationTargetException;
 
-
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import utils.ITreeToString;
-import utils.TagHelper;
+import util.ITreeToString;
+import util.TagHelper;
 import exceptions.ParsingException;
 import exceptions.SyntaxException;
 import exceptions.FilteringException;
@@ -25,9 +24,6 @@ public abstract class AbstractFilter implements ITreeToString
 	public abstract boolean shouldFilter(Object o)
 		throws FilteringException;
 
-	/** Throws unchecked FilterException , which should propagate to
-	{@link filter.FilterNode#parse(Node root, Class paramClass)}
-	*/
 	public static Map<TagHelper.Tag, Node> buildTagMap(Node root)
 		throws ParsingException
 	{

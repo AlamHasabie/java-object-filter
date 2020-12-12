@@ -1,5 +1,4 @@
 import org.w3c.dom.*;
-import conf.Loader;
 import filter.Factory;
 import filter.FilterNode;
 import filter.Group;
@@ -13,10 +12,8 @@ public class Main
 	{
 		try 
 		{
-			Document doc = Loader.load("sample.xml");
-			Node root = doc.getDocumentElement();
 
-			List<Group> groups = Factory.parse(doc);
+			List<Group> groups = Factory.generate();
 
 			// Driver object 
 			A a  = new A();
